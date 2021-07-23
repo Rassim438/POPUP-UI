@@ -1,0 +1,50 @@
+<p-header>
+  <h1>{{ 'defacto.item.header' | translate }}</h1>
+</p-header>
+<div>
+  <form [formGroup]="defactoItemAddForm" (ngSubmit)="onSubmit()">
+    <div class="p-fluid">
+      <div class="p-field-radiobutton">
+        <label for="type">{{ 'common.type' | translate }}</label>      
+        <p-radioButton name="type" value="LTC"  formControlName="type"></p-radioButton>
+        <label for="type">LTC</label>       
+        <p-radioButton name="type" value="GTR" formControlName="type"></p-radioButton>
+        <label for="type">GTR</label>
+      </div>
+      <div class="p-field">
+        <label for="currecny">{{ 'common.currency' | translate }}</label>
+        <p-dropdown id="currency" [options]="currencies" optionLabel="currency"
+          [placeholder]="'common.currency' | translate" formControlName="currency"></p-dropdown>
+      </div>
+      <div class="p-field">
+        <label for="carrier">{{ 'common.carrier' | translate }}</label>
+        <p-autoComplete class="pr-autocomplete" name="carrier" id="carrier" type="search" formControlName="carrier"
+          [ngClass]="'ui-autocomplete-small'" [placeholder]="'common.carrier' | translate" [autofocus]="true"
+          [suggestions]="operators" (completeMethod)="searchOperators($event)"
+          [emptyMessage]="'common.not.found' | translate" [forceSelection]="true" [dropdown]="true" field="name">
+          <ng-template let-s pTemplate="item">
+            <div class="disabled">
+              {{ s.name }}
+            </div>
+          </ng-template>
+        </p-autoComplete>
+      </div>
+      <div class="p-field">
+        <label for="item" class="font-weight-bold">{{ 'defacto.item' | translate }}</label>
+        <input type="text" formControlName="name" pInputText placeholder="Item">
+      </div>
+      <div class="p-field">
+        <label for="comments" class="font-weight-bold">{{ 'common.comments' | translate }}</label>        
+        <textarea id="comments" rows="5" cols="84" pInputTextarea></textarea>
+      </div>
+    </div>
+    <div class="p-d-flex p-jc-end">
+      <!-- <button class="p-button-rounded" (click)=hideDialog() pButton type="button" pRipple label="Cancel"></button> -->
+      <button pButton pRipple label="Cancel" icon="pi pi-times" pButton type="button" class="p-button-rounded" (click)="hideDialog()"></button>
+      <!-- <button type="submit" (click)=saveDefactoItem() class="p-ml-2 p-button-rounded p-button-success" pButton pRipple label="Save"></button> -->
+      <button pButton pRipple label="Save" (click)="saveDefactoItem()"  icon="pi pi-check" class="p-ml-2 p-button-rounded p-button-success" ></button>
+    </div>
+  </form>
+</div>
+
+

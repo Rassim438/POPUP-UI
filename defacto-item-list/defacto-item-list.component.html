@@ -1,0 +1,162 @@
+<ng-template #leftTemplate>
+  <div class="card">
+    <h1>{{ 'defacto.item.header' | translate }}</h1>
+    <form [formGroup]="defactoItemSearchForm" (ngSubmit)="onSubmit()">
+      <div class="p-fluid">
+        <div class="p-field">
+          <label for="carrier">{{ 'common.carrier' | translate }}</label>
+          <p-autoComplete
+            class="pr-autocomplete"
+            name="carrier"
+            id="carrier"
+            type="search"
+            formControlName="carrier"
+            [ngClass]="'ui-autocomplete-small'"
+            [placeholder]="'common.carrier' | translate"
+            [autofocus]="true"
+            [suggestions]="operators"
+            (completeMethod)="searchOperators($event)"
+            [emptyMessage]="'common.not.found' | translate"
+            [forceSelection]="true"
+            [dropdown]="true"
+            field="name"
+          >
+            <ng-template let-s pTemplate="item">
+              <div class="disabled">
+                {{ s.name }}
+              </div>
+            </ng-template>
+          </p-autoComplete>
+        </div>
+        <div class="p-field">
+          <label for="type">{{ 'common.type' | translate }}</label>
+          <p-dropdown
+            id="type"
+            [options]="types"
+            [placeholder]="'common.type' | translate"
+            formControlName="type"
+          ></p-dropdown>
+        </div>
+        <div class="p-field">
+          <label for="currecny">{{ 'common.currency' | translate }}</label>
+          <p-dropdown
+            id="currency"
+            [options]="currencies"
+            optionLabel="currency"
+            optionValue="currency"
+            [placeholder]="'common.currency' | translate"
+            formControlName="currency"
+          ></p-dropdown>
+        </div>
+        <div class="p-field">
+          <label for="name">{{ 'defacto.item' | translate }}</label>
+          <input id="name" name="name" pInputText formControlName="name" placeholder="Item" />
+        </div>
+      </div>
+      <div class="p-d-flex p-jc-end">
+        <button
+          type="submit"
+          class="p-button-rounded"
+          pButton
+          pRipple
+          [label]="'common.search' | translate"
+          [loading]="isSearching"
+          [icon]="'pi pi-search'"
+        ></button>
+        <button
+          pButton
+          pRipple
+          type="button"
+          (click)="addDefactoItem()"
+          class="p-button-rounded p-button-success p-ml-2"
+          [label]="'common.add' | translate"
+          [icon]="'pi pi-plus'"
+        ></button>
+      </div>
+    </form>
+  </div>
+</ng-template>
+<ng-template #rightTemplate>
+  <div class="p-card">
+    <p-table
+      class="p-datatable p-datatable-sm"
+      [value]="defactoItems"
+      (onLazyLoad)="loadDefactoItems($event)"
+      [lazyLoadOnInit]="false"
+      [paginator]="true"
+      [rows]="50"
+      [rowsPerPageOptions]="[10, 25, 50, 100]"
+      [totalRecords]="totalElements"
+      selectionMode="single"
+      [(first)]="first"
+      [loading]="isSearching"
+      [lazy]="true"
+    >
+      <ng-template pTemplate="caption">
+        <p class="">{{ totalElements }} record(s)</p>
+      </ng-template>
+      <ng-template pTemplate="header">
+        <tr>
+          <th>
+            {{ 'defacto.item.id' | translate }}
+          </th>
+          <th pSortableColumn="type">
+            {{ 'common.type' | translate }}
+            <p-sortIcon field="type"></p-sortIcon>
+          </th>
+          <th pSortableColumn="currency">
+            {{ 'common.currency' | translate }}
+            <p-sortIcon field="currency"></p-sortIcon>
+          </th>
+          <th>
+            {{ 'defacto.item' | translate }}
+          </th>
+          <th pSortableColumn="carrierId">
+            {{ 'common.carrier' | translate }}
+            <p-sortIcon field="carrieId"></p-sortIcon>
+          </th>
+          <th>
+            {{ 'common.comments' | translate }}
+          </th>
+          <th>
+            {{ 'common.actions' | translate }}
+          </th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-defactoItem>
+        <tr [pSelectableRow]="defactoItem">
+          <td>{{ defactoItem.id }}</td>
+          <td>{{ defactoItem.type }}</td>
+          <td>{{ defactoItem.currency?.currency }}</td>
+          <td>{{ defactoItem.name }}</td>
+          <td>{{ defactoItem.carrierName }}</td>
+          <td>{{ defactoItem.comments }}</td>
+          <td>
+            <button
+              pButton
+              type="button"
+              class="p-button-success p-button-sm p-button-rounded p-mr-2"
+              pTooltip="{{ 'defacto.item.edit.tooltip' | translate }}"
+              [icon]="'pi pi-user-edit'"
+            ></button>
+            <button
+              pButton
+              type="button"
+              class="p-button-danger p-button-sm p-button-rounded"
+              pTooltip="{{ 'defacto.item.delete.tooltip' | translate }}"
+              [icon]="'pi pi-trash'"
+            ></button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td [attr.colspan]="7" class="text-center">
+            {{ 'common.no.result' | translate }}
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</ng-template>
+<stgo-page [leftTemplate]="leftTemplate" [rightTemplate]="rightTemplate"></stgo-page>
